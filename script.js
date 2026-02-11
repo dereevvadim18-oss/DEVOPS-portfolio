@@ -2,7 +2,7 @@
 function addCertificate() {
     const certName = prompt('Название сертификата:');
     const certIssuer = prompt('Издатель:');
-    const certDate = prompt('Год получения (например, 2024):');
+    const certDate = prompt('Год получения (например, 2026):');
     const certLink = prompt('Ссылка на сертификат (опционально):');
 
     if (certName && certIssuer) {
