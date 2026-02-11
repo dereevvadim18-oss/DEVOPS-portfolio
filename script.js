@@ -1,3 +1,86 @@
+// ============ Certificate Management ============
+function addCertificate() {
+    const certName = prompt('Название сертификата:');
+    const certIssuer = prompt('Издатель:');
+    const certDate = prompt('Год получения (например, 2024):');
+    const certLink = prompt('Ссылка на сертификат (опционально):');
+
+    if (certName && certIssuer) {
+        const certificatesGrid = document.querySelector('.certificates-grid');
+        const newCert = document.createElement('div');
+        newCert.className = 'cert-card';
+        
+        const icons = ['fa-certificate', 'fa-shield-alt', 'fa-code-branch', 'fa-robot', 'fa-layer-group'];
+        const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+        
+        newCert.innerHTML = `
+            <div class="cert-icon">
+                <i class="fas ${randomIcon}"></i>
+            </div>
+            <h3>${certName}</h3>
+            <p>Профессиональный сертификат</p>
+            <p class="cert-issuer">Издатель: ${certIssuer}</p>
+            <p class="cert-date">${certDate || 'Текущий год'}</p>
+            ${certLink ? `<a href="${certLink}" target="_blank" class="cert-link">Посмотреть сертификат →</a>` : ''}
+        `;
+        
+        // Вставляем перед кнопкой добавления
+        const addButton = certificatesGrid.lastElementChild;
+        certificatesGrid.insertBefore(newCert, addButton);
+        
+        // Анимация появления
+        newCert.style.opacity = '0';
+        newCert.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            newCert.style.transition = 'all 0.6s ease';
+            newCert.style.opacity = '1';
+            newCert.style.transform = 'translateY(0)';
+        }, 10);
+        
+        alert('✅ Сертификат добавлен!');
+    }
+}
+
+// Сохранение сертификатов в localStorage
+window.addEventListener('beforeunload', () => {
+    const certs = [];
+    document.querySelectorAll('.cert-card:not(:last-child)').forEach(card => {
+        const title = card.querySelector('h3')?.textContent;
+        const issuer = card.querySelector('.cert-issuer')?.textContent;
+        const date = card.querySelector('.cert-date')?.textContent;
+        const link = card.querySelector('.cert-link')?.href;
+        if (title) certs.push({title, issuer, date, link});
+    });
+    localStorage.setItem('devops-certificates', JSON.stringify(certs));
+});
+
+// Загрузка сертификатов из localStorage
+window.addEventListener('load', () => {
+    const saved = localStorage.getItem('devops-certificates');
+    if (saved) {
+        const certs = JSON.parse(saved);
+        certs.forEach(cert => {
+            const certificatesGrid = document.querySelector('.certificates-grid');
+            const newCert = document.createElement('div');
+            newCert.className = 'cert-card';
+            const icons = ['fa-certificate', 'fa-shield-alt', 'fa-code-branch', 'fa-robot', 'fa-layer-group'];
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            newCert.innerHTML = `
+                <div class="cert-icon">
+                    <i class="fas ${randomIcon}"></i>
+                </div>
+                <h3>${cert.title}</h3>
+                <p>Профессиональный сертификат</p>
+                <p class="cert-issuer">${cert.issuer}</p>
+                <p class="cert-date">${cert.date}</p>
+                ${cert.link ? `<a href="${cert.link}" target="_blank" class="cert-link">Посмотреть сертификат →</a>` : ''}
+            `;
+            const addButton = certificatesGrid.lastElementChild;
+            certificatesGrid.insertBefore(newCert, addButton);
+        });
+    }
+});
+
 // ============ Hamburger Menu ============
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
@@ -139,7 +222,7 @@ if (window.performance) {
 }
 
 // ============ Console Welcome ============
-console.log('%c 🚀 Добро пожаловать на DevOps Portfolio!', 'font-size: 20px; color: #0ea5e9; font-weight: bold;');
+console.log('%c 🚀 Добро пожаловать на DevOps Portfolio 2026!', 'font-size: 20px; color: #0ea5e9; font-weight: bold;');
 console.log('%c Телефон: +7 (999) 999-99-99', 'color: #06b6d4;');
 console.log('%c Email: your@email.com', 'color: #06b6d4;');
 console.log('%c GitHub: github.com/yourprofile', 'color: #06b6d4;');
